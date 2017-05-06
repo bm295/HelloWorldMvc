@@ -50,6 +50,5 @@ D:\github\HelloWorldMvc\HelloWorldMvc\bin\Microsoft.Owin.Security.OAuth.xml
 D:\github\HelloWorldMvc\HelloWorldMvc\bin\Microsoft.Owin.Security.Google.xml
 D:\github\HelloWorldMvc\HelloWorldMvc\bin\Microsoft.Owin.Security.Twitter.xml
 D:\github\HelloWorldMvc\HelloWorldMvc\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-D:\github\HelloWorldMvc\HelloWorldMvc\obj\Debug\HelloWorldMvc.csprojResolveAssemblyReference.cache
 D:\github\HelloWorldMvc\HelloWorldMvc\obj\Debug\HelloWorldMvc.dll
 D:\github\HelloWorldMvc\HelloWorldMvc\obj\Debug\HelloWorldMvc.pdb
