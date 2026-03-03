@@ -1,54 +1,37 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MilkCoPOS.Models;
 using MilkCoPOS.Repositories;
 using MilkCoPOS.Services;
 
-namespace MilkCoPOS.Controllers
+namespace MilkCoPOS.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class OrdersController(IOrderRepository orderRepository, IOrderService orderService) : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class OrdersController : ControllerBase
+    [HttpGet]
+    public async Task<ActionResult<List<Order>>> GetOrders()
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderService _orderService;
+        var orders = await orderRepository.GetAllAsync();
+        return Ok(orders);
+    }
 
-        public OrdersController(IOrderRepository orderRepository, IOrderService orderService)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<Order>> GetOrder(int id)
+    {
+        var order = await orderRepository.GetByIdAsync(id);
+        return order is null ? NotFound() : Ok(order);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Order>> CreateOrder([FromBody] CreateOrderRequest request)
+    {
+        var result = await orderService.CreateOrderAsync(request);
+        if (!result.Success || result.Order is null)
         {
-            _orderRepository = orderRepository;
-            _orderService = orderService;
+            return BadRequest(new { message = result.Error });
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetOrders()
-        {
-            var orders = await _orderRepository.GetAllAsync();
-            return Ok(orders);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
-        {
-            var order = await _orderRepository.GetByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(order);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(CreateOrderRequest request)
-        {
-            var result = await _orderService.CreateOrderAsync(request);
-            if (!result.Success)
-            {
-                return BadRequest(new { message = result.Error });
-            }
-
-            return CreatedAtAction(nameof(GetOrder), new { id = result.Order.OrderId }, result.Order);
-        }
+        return CreatedAtAction(nameof(GetOrder), new { id = result.Order.OrderId }, result.Order);
     }
 }

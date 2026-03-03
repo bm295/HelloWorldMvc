@@ -1,10 +1,8 @@
-using System.Threading.Tasks;
 using MilkCoPOS.Models;
 
-namespace MilkCoPOS.Services
+namespace MilkCoPOS.Services;
+
+public interface IOrderService
 {
-    public interface IOrderService
-    {
-        Task<(bool Success, string Error, Order Order)> CreateOrderAsync(CreateOrderRequest request);
-    }
+    Task<(bool Success, string? Error, Order? Order)> CreateOrderAsync(CreateOrderRequest request);
 }
