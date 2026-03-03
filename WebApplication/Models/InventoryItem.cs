@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MilkCoPOS.Models
+namespace MilkCoPOS.Models;
+
+public class InventoryItem
 {
-    public class InventoryItem
-    {
-        [Key]
-        public int ItemId { get; set; }
+    [Key]
+    public int ItemId { get; set; }
 
-        [Required]
-        [StringLength(120)]
-        public string Name { get; set; }
+    [Required]
+    [StringLength(120)]
+    public string Name { get; set; } = string.Empty;
 
-        public int Quantity { get; set; }
-    }
+    [Range(0, int.MaxValue)]
+    public int Quantity { get; set; }
 }

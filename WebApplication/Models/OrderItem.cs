@@ -1,22 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MilkCoPOS.Models
+namespace MilkCoPOS.Models;
+
+public class OrderItem
 {
-    public class OrderItem
-    {
-        [Key]
-        public int OrderItemId { get; set; }
+    [Key]
+    public int OrderItemId { get; set; }
 
-        [Required]
-        public int OrderId { get; set; }
+    [Required]
+    public int OrderId { get; set; }
 
-        [ForeignKey(nameof(OrderId))]
-        public Order Order { get; set; }
+    [ForeignKey(nameof(OrderId))]
+    public Order? Order { get; set; }
 
-        [Required]
-        public int InventoryItemId { get; set; }
+    [Required]
+    public int InventoryItemId { get; set; }
 
-        public int Quantity { get; set; }
-    }
+    [Range(1, int.MaxValue)]
+    public int Quantity { get; set; }
 }

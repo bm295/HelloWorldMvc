@@ -1,13 +1,10 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MilkCoPOS.Models;
 
-namespace MilkCoPOS.Repositories
+namespace MilkCoPOS.Repositories;
+
+public interface IOrderRepository
 {
-    public interface IOrderRepository
-    {
-        Task<List<Order>> GetAllAsync();
-        Task<Order> GetByIdAsync(int orderId);
-        Task<Order> AddAsync(Order order);
-    }
+    Task<List<Order>> GetAllAsync();
+    Task<Order?> GetByIdAsync(int orderId);
+    Task<Order> AddAsync(Order order);
 }

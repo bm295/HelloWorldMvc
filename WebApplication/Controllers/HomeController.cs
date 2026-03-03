@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace MilkCoPOS.Controllers
+namespace MilkCoPOS.Controllers;
+
+[ApiController]
+[Route("api/health")]
+public class HomeController : ControllerBase
 {
-    [ApiController]
-    [Route("api/health")]
-    public class HomeController : ControllerBase
-    {
-        [HttpGet]
-        public IActionResult Get() => Ok(new { status = "ok" });
-    }
+    [HttpGet]
+    public IActionResult Get() => Ok(new { status = "ok", system = "MilkCO FnB Management" });
 }
