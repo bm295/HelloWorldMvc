@@ -3,7 +3,7 @@ using MilkCoPOS.Data;
 using MilkCoPOS.Repositories;
 using MilkCoPOS.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("DefaultConnection is not configured.");
