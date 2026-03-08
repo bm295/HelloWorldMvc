@@ -17,5 +17,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithOne(i => i.Order)
             .HasForeignKey(i => i.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Payment>()
+            .Property(p => p.Amount)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Payment>()
+            .Property(p => p.Method)
+            .IsRequired(false);
+
+        modelBuilder.Entity<Payment>()
+            .Property(p => p.Status)
+            .IsRequired(false);
     }
 }
