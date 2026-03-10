@@ -8,7 +8,18 @@ public class OrderPageViewModel
     [StringLength(100)]
     public string Customer { get; set; } = string.Empty;
 
+    [Required]
+    public int TableId { get; set; }
+
+    public List<TableOptionViewModel> Tables { get; set; } = [];
+
     public List<OrderLineViewModel> Items { get; set; } = [];
+}
+
+public class TableOptionViewModel
+{
+    public int TableId { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
 
 public class OrderLineViewModel

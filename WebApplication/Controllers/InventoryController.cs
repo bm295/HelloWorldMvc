@@ -1,30 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MilkCoPOS.Data;
+using MilkCoPOS.Application.Services;
 using MilkCoPOS.Models;
 
 namespace MilkCoPOS.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InventoryController(ApplicationDbContext context) : ControllerBase
+public class InventoryController(IInventoryUseCaseService inventoryService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<InventoryItem>>> GetInventory() =>
-        Ok(await context.Inventory.ToListAsync());
+        Ok(await inventoryService.GetInventoryAsync());
 
     [HttpPost]
     public async Task<ActionResult<InventoryItem>> CreateItem([FromBody] InventoryItem item)
     {
-        context.Inventory.Add(item);
-        await context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetItem), new { id = item.ItemId }, item);
+        var created = await inventoryService.CreateItemAsync(item);
+        return CreatedAtAction(nameof(GetItem), new { id = created.ItemId }, created);
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<InventoryItem>> GetItem(int id)
     {
-        var item = await context.Inventory.FindAsync(id);
+        var item = await inventoryService.GetInventoryItemAsync(id);
         return item is null ? NotFound() : Ok(item);
     }
 }

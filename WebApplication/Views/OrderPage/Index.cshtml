@@ -50,6 +50,12 @@
                 <span asp-validation-for="Customer" class="field-error"></span>
             </label>
 
+            <label class="field-block" asp-for="TableId">
+                <span>Table</span>
+                <select asp-for="TableId" asp-items="@(new SelectList(Model.Tables, "TableId", "Name"))"></select>
+                <span asp-validation-for="TableId" class="field-error"></span>
+            </label>
+
             <div class="inventory-header">
                 <div>
                     <p class="section-kicker">Inventory lines</p>
