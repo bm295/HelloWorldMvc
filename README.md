@@ -6,7 +6,7 @@ MilkCO is a small FnB management sample for:
 - payment tracking
 - PMP project documents under `docs/`
 
-The app includes a web order page on `/orders` in addition to the existing APIs.
+The app includes a web order page on `/orders` and APIs aligned to domain use cases (orders, kitchen, payments, tables, inventory, and reporting).
 
 ## Stack
 - C# 14
@@ -15,12 +15,26 @@ The app includes a web order page on `/orders` in addition to the existing APIs.
 - Entity Framework Core 10 + SQL Server
 - Docker + Docker Compose
 
+
+## Architecture
+The repository now follows a ports-and-adapters style:
+- `Application/Ports`: repository port contracts
+- `Application/Services`: use-case orchestration
+- `Infrastructure/Persistence`: EF Core adapters implementing ports
+- `Controllers`: API adapters calling use-case services only
+
 ## Main routes
 - Order page: `/orders`
 - Health API: `GET /api/health`
 - Orders API: `GET /api/orders`
+- Add order item: `POST /api/orders/{orderId}/items`
+- Remove order item: `DELETE /api/orders/{orderId}/items/{orderItemId}`
+- Send order to kitchen: `POST /api/orders/{orderId}/send-to-kitchen`
+- Close order: `POST /api/orders/{orderId}/close`
 - Inventory API: `GET /api/inventory`
-- Payments API: `GET /api/payments`
+- Payments API: `GET /api/payments`, `POST /api/payments/orders/{orderId}`
+- Tables API: `GET /api/tables`
+- Reporting API: `GET /api/reports/operations-summary`
 
 ## Run with Docker
 Starts SQL Server and the app together.

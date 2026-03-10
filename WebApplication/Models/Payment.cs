@@ -17,5 +17,7 @@ public class Payment
     public string Method { get; set; } = "Cash";
 
     [StringLength(30)]
-    public string Status { get; set; } = "Pending";
+    public string Status { get; set; } = "Captured";
+
+    public DateTime ProcessedAtUtc { get; set; } = DateTime.UtcNow;
 }

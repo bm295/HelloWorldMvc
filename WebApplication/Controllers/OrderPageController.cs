@@ -1,22 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MilkCoPOS.Data;
+using MilkCoPOS.Application.Services;
 using MilkCoPOS.Models;
-using MilkCoPOS.Repositories;
-using MilkCoPOS.Services;
 using MilkCoPOS.ViewModels;
 
 namespace MilkCoPOS.Controllers;
 
 public class OrderPageController(
-    ApplicationDbContext context,
-    IOrderService orderService,
-    IOrderRepository orderRepository) : Controller
+    IInventoryUseCaseService inventoryService,
+    IOrderUseCaseService orderService,
+    ITableUseCaseService tableService) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var model = await BuildPageModelAsync(null, string.Empty);
+        var model = await BuildPageModelAsync(null, string.Empty, null);
         return View(model);
     }
 
@@ -28,7 +25,7 @@ public class OrderPageController(
             item => item.InventoryItemId,
             item => item.RequestedQuantity);
 
-        var model = await BuildPageModelAsync(requestedQuantities, postedModel.Customer);
+        var model = await BuildPageModelAsync(requestedQuantities, postedModel.Customer, postedModel.TableId);
 
         var selectedItems = model.Items
             .Where(item => item.RequestedQuantity > 0)
@@ -46,6 +43,11 @@ public class OrderPageController(
                 $"Requested quantity for {item.Name} exceeds the available stock.");
         }
 
+        if (model.Tables.All(t => t.TableId != model.TableId))
+        {
+            ModelState.AddModelError(string.Empty, "Please select a valid table.");
+        }
+
         if (!ModelState.IsValid)
         {
             return View(model);
@@ -54,6 +56,7 @@ public class OrderPageController(
         var request = new CreateOrderRequest
         {
             Customer = model.Customer,
+            TableId = model.TableId,
             Items = selectedItems.Select(item => new CreateOrderItemRequest
             {
                 InventoryItemId = item.InventoryItemId,
@@ -65,7 +68,7 @@ public class OrderPageController(
         if (!result.Success || result.Order is null)
         {
             ModelState.AddModelError(string.Empty, result.Error ?? "Unable to place the order.");
-            var refreshedModel = await BuildPageModelAsync(requestedQuantities, postedModel.Customer);
+            var refreshedModel = await BuildPageModelAsync(requestedQuantities, postedModel.Customer, postedModel.TableId);
             return View(refreshedModel);
         }
 
@@ -75,20 +78,14 @@ public class OrderPageController(
     [HttpGet]
     public async Task<IActionResult> Confirmation(int id)
     {
-        var order = await orderRepository.GetByIdAsync(id);
+        var order = await orderService.GetOrderAsync(id);
         if (order is null)
         {
             return NotFound();
         }
 
-        var inventoryItemIds = order.Items
-            .Select(item => item.InventoryItemId)
-            .Distinct()
-            .ToList();
-
-        var inventoryNames = await context.Inventory
-            .Where(item => inventoryItemIds.Contains(item.ItemId))
-            .ToDictionaryAsync(item => item.ItemId, item => item.Name);
+        var inventoryItems = await inventoryService.GetInventoryAsync();
+        var inventoryNames = inventoryItems.ToDictionary(item => item.ItemId, item => item.Name);
 
         var model = new OrderConfirmationViewModel
         {
@@ -112,15 +109,22 @@ public class OrderPageController(
 
     private async Task<OrderPageViewModel> BuildPageModelAsync(
         IReadOnlyDictionary<int, int>? requestedQuantities,
-        string customer)
+        string customer,
+        int? selectedTableId)
     {
-        var inventoryItems = await context.Inventory
-            .OrderBy(item => item.Name)
-            .ToListAsync();
+        var inventoryItems = await inventoryService.GetInventoryAsync();
+        var tables = await tableService.GetTablesAsync();
+
+        var defaultTableId = selectedTableId ?? tables.FirstOrDefault()?.TableId ?? 0;
 
         return new OrderPageViewModel
         {
             Customer = customer,
+            TableId = defaultTableId,
+            Tables = tables
+                .Where(t => t.Status == TableStatus.Available || t.TableId == defaultTableId)
+                .Select(t => new TableOptionViewModel { TableId = t.TableId, Name = $"{t.Name} ({t.SeatCount} seats)" })
+                .ToList(),
             Items = inventoryItems.Select(item => new OrderLineViewModel
             {
                 InventoryItemId = item.ItemId,

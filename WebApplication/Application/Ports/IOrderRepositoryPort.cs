@@ -1,10 +1,11 @@
 using MilkCoPOS.Models;
 
-namespace MilkCoPOS.Repositories;
+namespace MilkCoPOS.Application.Ports;
 
-public interface IOrderRepository
+public interface IOrderRepositoryPort
 {
     Task<List<Order>> GetAllAsync();
     Task<Order?> GetByIdAsync(int orderId);
     Task<Order> AddAsync(Order order);
+    Task SaveChangesAsync();
 }
