@@ -5,7 +5,7 @@
 - Knowledge Area: Integration
 - Process Group: Initiating
 - Document Owner: PM/BA
-- Last Updated: 2026-03-04
+- Last Updated: 2026-03-10
 - Status: Draft for sponsor approval
 
 ## Objective
@@ -41,12 +41,14 @@ In scope:
 - SQL Server persistence via Entity Framework Core migrations.
 - Business rule: creating an order decrements inventory and blocks when stock is insufficient.
 - Dockerized local environment for repeatable startup.
+- External platform integration with FoodApp for order ingestion and status synchronization.
 
 Out of scope for this phase:
 - Frontend POS user interface.
 - Authentication and role-based access control.
 - Advanced analytics/reporting and accounting integrations.
 - Multi-branch or multi-tenant capabilities.
+- Bi-directional menu/price authoring from FoodApp dashboard into internal master data.
 
 ### Measurable Objectives
 - Complete charter approval and baseline by March 8, 2026.
@@ -58,11 +60,34 @@ Out of scope for this phase:
 - Named team capacity is not fully finalized.
 - Current solution depends on SQL Server and .NET 10 runtime compatibility.
 - Security controls are minimal and require a follow-on scope.
+- FoodApp API access, sandbox quality, and production approval are controlled by external vendor timelines.
 
 ### Initial Assumptions
 - Sponsor and operations stakeholders are available weekly for decisions.
 - Existing API implementation is accepted as MVP baseline.
 - Pilot environment can run Docker services for API and SQL Server.
+- FoodApp provides stable API contracts (menu, order, order status, webhook/retry behavior) and technical support during onboarding.
+
+## Change Note: New Requirement (FoodApp Integration)
+
+### Business/Technical Requirement
+- MilkCO needs to receive and process online delivery orders from FoodApp in the same operational flow as in-store orders, including inventory deduction and kitchen execution.
+- The API baseline must expose/consume integration interfaces for:
+  - inbound FoodApp orders,
+  - outbound order-status updates,
+  - error/retry handling and traceability.
+
+### Affected Stakeholders
+- Sponsor/Restaurant Owner: approves additional integration budget and timeline.
+- Operations Manager: defines order handling SLA and fulfillment policies.
+- Cashier/Kitchen staff: operates mixed channels (in-store + FoodApp) and resolves exception orders.
+- Technical Lead/Backend Engineer: designs API adapter, mapping rules, and observability.
+- FoodApp Partner Manager/Technical Contact: provides credentials, API specs, and go-live certification.
+
+### Initial Impacts to Scope and Architecture
+- Scope expansion from standalone FnB API to ecosystem-ready API integration.
+- Architecture impact: add external integration layer (FoodApp adapter), webhook/auth security controls, idempotency keys, and integration log/monitoring path.
+- Planning impact: add onboarding tasks, contract testing, and partner UAT/go-live checklist.
 
 ## Outputs
 - [Business Case](../01-project-charter/business-case.md)
