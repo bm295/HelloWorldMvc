@@ -1,4 +1,6 @@
 using MilkCoPOS.Application.Ports;
+using MilkCoPOS.Domain.Entities;
+using MilkCoPOS.Domain.Enums;
 using MilkCoPOS.Models;
 
 namespace MilkCoPOS.Application.Services;

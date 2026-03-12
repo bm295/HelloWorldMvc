@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MilkCoPOS.Application.Services;
+using MilkCoPOS.Domain.Entities;
 using MilkCoPOS.Models;
 
 namespace MilkCoPOS.Controllers;

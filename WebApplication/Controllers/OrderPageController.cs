@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MilkCoPOS.Application.Services;
+using MilkCoPOS.Domain.Entities;
+using MilkCoPOS.Domain.Enums;
 using MilkCoPOS.Models;
 using MilkCoPOS.ViewModels;
 

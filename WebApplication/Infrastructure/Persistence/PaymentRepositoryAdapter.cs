@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MilkCoPOS.Application.Ports;
 using MilkCoPOS.Data;
-using MilkCoPOS.Models;
+using MilkCoPOS.Domain.Entities;
 
 namespace MilkCoPOS.Infrastructure.Persistence;
 

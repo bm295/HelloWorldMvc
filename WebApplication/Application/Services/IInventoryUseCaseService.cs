@@ -1,4 +1,4 @@
-using MilkCoPOS.Models;
+using MilkCoPOS.Domain.Entities;
 
 namespace MilkCoPOS.Application.Services;
 

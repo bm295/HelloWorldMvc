@@ -1,3 +1,4 @@
+using MilkCoPOS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using MilkCoPOS.Application.Ports;
 using MilkCoPOS.Application.Services;
@@ -36,14 +37,14 @@ using (var scope = app.Services.CreateScope())
     {
         dbContext.Tables.AddRange(new[]
         {
-            new MilkCoPOS.Models.DiningTable { Name = "T1", SeatCount = 4 },
-            new MilkCoPOS.Models.DiningTable { Name = "T2", SeatCount = 4 },
-            new MilkCoPOS.Models.DiningTable { Name = "T3", SeatCount = 2 },
-            new MilkCoPOS.Models.DiningTable { Name = "T4", SeatCount = 2 },
-            new MilkCoPOS.Models.DiningTable { Name = "T5", SeatCount = 6 },
-            new MilkCoPOS.Models.DiningTable { Name = "T6", SeatCount = 6 },
-            new MilkCoPOS.Models.DiningTable { Name = "T7", SeatCount = 8 },
-            new MilkCoPOS.Models.DiningTable { Name = "T8", SeatCount = 8 }
+            new DiningTable { Name = "T1", SeatCount = 4 },
+            new DiningTable { Name = "T2", SeatCount = 4 },
+            new DiningTable { Name = "T3", SeatCount = 2 },
+            new DiningTable { Name = "T4", SeatCount = 2 },
+            new DiningTable { Name = "T5", SeatCount = 6 },
+            new DiningTable { Name = "T6", SeatCount = 6 },
+            new DiningTable { Name = "T7", SeatCount = 8 },
+            new DiningTable { Name = "T8", SeatCount = 8 }
         });
         dbContext.SaveChanges();
     }
