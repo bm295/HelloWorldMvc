@@ -1,4 +1,4 @@
-namespace MilkCoPOS.Models;
+namespace MilkCoPOS.Domain.Enums;
 
 public enum OrderStatus
 {

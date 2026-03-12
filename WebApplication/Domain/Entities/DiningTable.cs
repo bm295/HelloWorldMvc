@@ -1,20 +1,11 @@
-using System.ComponentModel.DataAnnotations;
+using MilkCoPOS.Domain.Enums;
 
-namespace MilkCoPOS.Models;
+namespace MilkCoPOS.Domain.Entities;
 
 public class DiningTable
 {
-    [Key]
     public int TableId { get; set; }
-
-    [Required]
-    [StringLength(30)]
     public string Name { get; set; } = string.Empty;
-
-    [Range(1, 40)]
     public int SeatCount { get; set; }
-
     public TableStatus Status { get; set; } = TableStatus.Available;
-
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
 }

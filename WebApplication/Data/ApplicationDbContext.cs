@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MilkCoPOS.Models;
+using MilkCoPOS.Domain.Entities;
 
 namespace MilkCoPOS.Data;
 
@@ -13,34 +13,48 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Order>()
-            .HasMany(o => o.Items)
-            .WithOne(i => i.Order)
-            .HasForeignKey(i => i.OrderId)
-            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasKey(o => o.OrderId);
+            entity.Property(o => o.Customer).IsRequired().HasMaxLength(100);
+            entity.HasMany(o => o.Items)
+                .WithOne()
+                .HasForeignKey(i => i.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(o => o.Status).HasConversion<string>().HasMaxLength(30);
+            entity.HasOne<DiningTable>()
+                .WithMany()
+                .HasForeignKey(o => o.TableId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
-        modelBuilder.Entity<Order>()
-            .HasOne(o => o.Table)
-            .WithMany(t => t.Orders)
-            .HasForeignKey(o => o.TableId)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<OrderItem>(entity =>
+        {
+            entity.HasKey(i => i.OrderItemId);
+            entity.Property(i => i.Quantity).IsRequired();
+        });
 
-        modelBuilder.Entity<Order>()
-            .Property(o => o.Status)
-            .HasConversion<string>()
-            .HasMaxLength(30);
+        modelBuilder.Entity<DiningTable>(entity =>
+        {
+            entity.HasKey(t => t.TableId);
+            entity.Property(t => t.Name).IsRequired().HasMaxLength(30);
+            entity.Property(t => t.Status).HasConversion<string>().HasMaxLength(30);
+        });
 
-        modelBuilder.Entity<DiningTable>()
-            .Property(t => t.Status)
-            .HasConversion<string>()
-            .HasMaxLength(30);
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.HasKey(p => p.PaymentId);
+            entity.Property(p => p.Method).HasMaxLength(50);
+            entity.Property(p => p.Status).HasMaxLength(30);
+            entity.Property(p => p.Amount).HasPrecision(18, 2);
+        });
 
-        modelBuilder.Entity<Payment>()
-            .Property(p => p.Amount)
-            .HasPrecision(18, 2);
-
-        modelBuilder.Entity<InventoryItem>()
-            .Property(i => i.UnitPrice)
-            .HasPrecision(18, 2);
+        modelBuilder.Entity<InventoryItem>(entity =>
+        {
+            entity.HasKey(i => i.ItemId);
+            entity.Property(i => i.Name).IsRequired().HasMaxLength(120);
+            entity.Property(i => i.Unit).HasMaxLength(16);
+            entity.Property(i => i.UnitPrice).HasPrecision(18, 2);
+        });
     }
 }
