@@ -83,8 +83,8 @@ Then set `ConnectionStrings:DefaultConnection` in `WebApplication/appsettings.js
 ```
 
 ```bash
-dotnet restore HelloWorldMvc.sln
-dotnet build HelloWorldMvc.sln
+dotnet restore MiCo.sln
+dotnet build MiCo.sln
 dotnet run --project WebApplication/WebApplication.csproj
 ```
 

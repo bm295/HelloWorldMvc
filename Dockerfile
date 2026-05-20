@@ -2,9 +2,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY HelloWorldMvc.sln ./
+COPY MiCo.sln ./
 COPY WebApplication/WebApplication.csproj WebApplication/
-RUN dotnet restore HelloWorldMvc.sln
+RUN dotnet restore MiCo.sln
 
 COPY . .
 RUN dotnet publish WebApplication/WebApplication.csproj -c Release -o /app/publish /p:UseAppHost=false

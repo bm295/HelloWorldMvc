@@ -28,28 +28,6 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
-
-    if (!dbContext.Tables.Any())
-    {
-        dbContext.Tables.AddRange(new[]
-        {
-            new DiningTable { Name = "T1", SeatCount = 4 },
-            new DiningTable { Name = "T2", SeatCount = 4 },
-            new DiningTable { Name = "T3", SeatCount = 2 },
-            new DiningTable { Name = "T4", SeatCount = 2 },
-            new DiningTable { Name = "T5", SeatCount = 6 },
-            new DiningTable { Name = "T6", SeatCount = 6 },
-            new DiningTable { Name = "T7", SeatCount = 8 },
-            new DiningTable { Name = "T8", SeatCount = 8 }
-        });
-        dbContext.SaveChanges();
-    }
-}
-
 app.UseStaticFiles();
 
 app.MapGet("/", context =>

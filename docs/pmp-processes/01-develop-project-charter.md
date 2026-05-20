@@ -14,7 +14,7 @@ Authorize and align the MilkCO FnB Management API initiative to digitize core re
 ## Inputs
 - Product and technical baseline:
   - [Repository Overview](../../README.md)
-  - [Solution File](../../HelloWorldMvc.sln)
+  - [Solution File](../../MiCo.sln)
   - [API Startup and DI](../../WebApplication/Program.cs)
   - [Domain Models](../../WebApplication/Models)
   - [Order Workflow and Inventory Deduction](../../WebApplication/Services/OrderService.cs)

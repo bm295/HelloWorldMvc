@@ -7,7 +7,7 @@
 ## Measurable Criteria
 | ID | Criterion | Target | Validation Method | Owner |
 |---|---|---|---|---|
-| SC-01 | Build reliability | `dotnet build HelloWorldMvc.sln` succeeds with 0 errors | Build log review | Technical Lead |
+| SC-01 | Build reliability | `dotnet build MiCo.sln` succeeds with 0 errors | Build log review | Technical Lead |
 | SC-02 | Environment startup | `docker compose up --build` starts API and SQL containers successfully | Container health and API check | DevOps/Backend |
 | SC-03 | Inventory read/write flow | `GET /api/inventory`, `POST /api/inventory`, `GET /api/inventory/{id}` work as expected | API functional test | QA |
 | SC-04 | Order flow with stock protection | `POST /api/orders` creates order only when stock is sufficient; rejects insufficient stock | API functional test with positive/negative cases | QA + Backend |

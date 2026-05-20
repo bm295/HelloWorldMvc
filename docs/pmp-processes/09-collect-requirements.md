@@ -7,57 +7,58 @@
 - Document Owner: PM/BA
 - Last Updated: 2026-03-10
 
-## Mục tiêu
-Thu thập, chuẩn hóa, và ưu tiên yêu cầu nghiệp vụ/kỹ thuật cho tích hợp FoodApp nhằm đảm bảo luồng vận hành đồng nhất giữa đơn tại quầy và đơn online.
+## Objective
+Collect, standardize, and prioritize business and technical requirements for the FoodApp integration to ensure consistent operations between in-store and online orders.
 
 ## Inputs
-- Product baseline hiện tại (inventory, order, payment API).
-- Yêu cầu mới từ Sponsor/Ops: hỗ trợ kênh FoodApp.
-- Tài liệu API/partner onboarding của FoodApp.
-- Quy trình vận hành nhà hàng hiện tại: nhận đơn, chế biến, giao món, thanh toán, đối soát.
+- Current product baseline (inventory, order, payment API).
+- New requirement from Sponsor/Ops: support FoodApp channel.
+- FoodApp API and partner onboarding documentation.
+- Current restaurant operating process: order intake, preparation, delivery, payment, reconciliation.
 
 ## Tools & Techniques
-- Workshop 3 bên: Business (Ops/Cashier), Technical team, FoodApp partner.
-- User story mapping cho end-to-end flow đặt món từ FoodApp.
+- Three-party workshop: Business (Ops/Cashier), Technical team, FoodApp partner.
+- User story mapping for the end-to-end FoodApp ordering flow.
 - Interface analysis (payload mapping, enum mapping, error code mapping).
-- MoSCoW prioritization cho release đầu tiên.
+- MoSCoW prioritization for the first release.
 
 ## Outputs
 - Functional requirements:
-  - Nhận đơn FoodApp theo thời gian thực hoặc polling fallback.
-  - Ánh xạ sản phẩm/combo/add-on từ FoodApp vào menu nội bộ.
-  - Đồng bộ trạng thái đơn (accepted/preparing/completed/cancelled).
+  - Receive FoodApp orders in real time or via polling fallback.
+  - Map products/combos/add-ons from FoodApp to the internal menu.
+  - Synchronize order status (accepted/preparing/completed/cancelled).
 - Non-functional requirements:
-  - Idempotency để tránh tạo trùng đơn.
-  - Retry/backoff khi mất kết nối tạm thời.
-  - Audit log cho truy vết tranh chấp đơn hàng.
-- Acceptance criteria cho UAT liên kênh.
-- Requirement traceability matrix liên kết đến scope, test, và deployment checklist.
+  - Idempotency to avoid duplicate orders.
+  - Retry/backoff on temporary connectivity loss.
+  - Audit logging for order dispute traceability.
+  - Scalability: the system must handle the initial FoodApp peak load of at least x requests per minute and be easy to scale as volume increases.
+- Acceptance criteria for cross-channel UAT.
+- Requirement traceability matrix linked to scope, testing, and deployment checklist.
 
 ## Affected Stakeholders
 - Sponsor/Owner
 - Operations Manager
 - Cashier & Kitchen Staff
 - PM/BA
-- Tech Lead + Backend Engineers
+- Tech Lead and Backend Engineers
 - QA
 - FoodApp Partner Technical Team
 
 ## Assumptions and Constraints
-- Assumption: danh mục món nội bộ đủ chuẩn để map với danh mục FoodApp.
-- Assumption: FoodApp cho phép môi trường test đủ kịch bản lỗi.
-- Constraint: release window phụ thuộc vào lịch chứng nhận tích hợp của FoodApp.
-- Constraint: nguồn lực QA giới hạn, cần ưu tiên kịch bản critical path.
+- Assumption: the internal menu catalog is sufficient to map to the FoodApp catalog.
+- Assumption: FoodApp provides a test environment with enough error scenario coverage.
+- Constraint: the release window depends on FoodApp's integration certification schedule.
+- Constraint: QA capacity is limited, requiring prioritization of critical path scenarios.
 
 ## Follow-up Actions
-- BA: chốt BRD/FRD phần FoodApp integration và sign-off nghiệp vụ.
-- Tech Lead: tạo specification cho API adapter + mapping table.
-- QA: chuẩn bị test case cho duplicate order, partial failure, delayed callback.
-- Ops: xác nhận quy trình xử lý ngoại lệ tại quầy khi đơn online lỗi trạng thái.
+- BA: finalize BRD/FRD for the FoodApp integration and sign off requirements.
+- Tech Lead: create specification for the API adapter and mapping table.
+- QA: prepare test cases for duplicate orders, partial failures, and delayed callbacks.
+- Ops: confirm exception handling procedures at the counter when online order status fails.
 
 ## AI Agent Prompt Seed
 ```text
-Bạn là PM Assistant cho dự án phần mềm quản lý FnB MilkCO 40 chỗ.
-Hãy hoàn thiện process Collect Requirements theo PMBOK cho yêu cầu tích hợp FoodApp,
-đề xuất action items, owner, deadline, và risk/dependency liên quan.
+You are a PM Assistant for the MilkCO 40-seat F&B management software project.
+Complete the Collect Requirements process according to PMBOK for the FoodApp integration request,
+propose action items, owners, deadlines, and related risks/dependencies.
 ```
