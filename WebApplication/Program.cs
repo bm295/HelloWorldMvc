@@ -17,6 +17,7 @@ builder.Services.AddScoped<IOrderRepositoryPort, OrderRepositoryAdapter>();
 builder.Services.AddScoped<IInventoryRepositoryPort, InventoryRepositoryAdapter>();
 builder.Services.AddScoped<IPaymentRepositoryPort, PaymentRepositoryAdapter>();
 builder.Services.AddScoped<ITableRepositoryPort, TableRepositoryAdapter>();
+builder.Services.AddScoped<IReportingRepositoryPort, ReportingRepositoryAdapter>();
 
 builder.Services.AddScoped<IOrderUseCaseService, OrderUseCaseService>();
 builder.Services.AddScoped<IInventoryUseCaseService, InventoryUseCaseService>();
