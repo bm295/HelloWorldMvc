@@ -1,0 +1,76 @@
+name: .NET Test and Code Coverage
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore HelloWorldMvc.sln
+
+      - name: Build
+        run: dotnet build HelloWorldMvc.sln --configuration Release --no-restore
+
+      - name: Run tests with coverage
+        shell: pwsh
+        run: |
+          $testProjects = Get-ChildItem -Path . -Recurse -Filter '*Tests.csproj' -File |
+            Where-Object { $_.FullName -notmatch '/(bin|obj)/' }
+
+          if ($testProjects.Count -eq 0) {
+            "### Code coverage`n`nNo `*Tests.csproj` project was found; coverage is not available yet." >> $env:GITHUB_STEP_SUMMARY
+            Write-Host 'No test projects found. Coverage is not available yet.'
+            exit 0
+          }
+
+          foreach ($project in $testProjects) {
+            dotnet test $project.FullName --configuration Release --no-build --no-restore `
+              --collect:'XPlat Code Coverage' `
+              --results-directory ./TestResults --logger 'console;verbosity=normal'
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Generate coverage report
+        if: success()
+        shell: bash
+        run: |
+          if ! find TestResults -type f -name 'coverage.cobertura.xml' -print -quit 2>/dev/null | grep -q .; then
+            echo 'No coverage file was produced; skipping report generation.'
+            exit 0
+          fi
+
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+          reportgenerator \
+            -reports:'TestResults/**/coverage.cobertura.xml' \
+            -targetdir:'CoverageReport' \
+            -reporttypes:'HtmlInline_AzurePipelines;Cobertura;TextSummary'
+
+          echo '### Code coverage' >> "$GITHUB_STEP_SUMMARY"
+          echo '```text' >> "$GITHUB_STEP_SUMMARY"
+          cat CoverageReport/Summary.txt >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat CoverageReport/Summary.txt
+
+      - name: Upload coverage report
+        if: always() && hashFiles('CoverageReport/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: CoverageReport
